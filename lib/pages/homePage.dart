@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:magic_cards/components/floatingAction.dart';
 import 'package:magic_cards/theme/color.dart';
 
 import 'package:http/http.dart' as http;
@@ -59,6 +60,7 @@ class _IndexPageState extends State<IndexPage> {
             ),
           ],
         ),
+        floatingActionButton: FancyFab(),
         body: getBody());
   }
 
