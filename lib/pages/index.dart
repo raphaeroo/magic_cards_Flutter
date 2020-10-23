@@ -69,7 +69,7 @@ class _IndexPageState extends State<IndexPage> {
     }
     return ListView.builder(
       itemCount: cards.length,
-      itemBuilder: (context, index) {
+      itemBuilder: (BuildContext context, int index) {
         return getCard(cards[index]);
       },
     );
@@ -85,7 +85,6 @@ class _IndexPageState extends State<IndexPage> {
         'https://cdn-a.william-reed.com/var/wrbm_gb_food_pharma/storage/images/1/8/6/0/230681-6-eng-GB/IB3-Limited-SIC-Pharma-April-20142_news_large.jpg';
 
     var getColors = (color) {
-      print(color);
       switch (color) {
         case 'green':
           return Colors.green;
@@ -153,15 +152,16 @@ class _IndexPageState extends State<IndexPage> {
                           ),
                         ]),
                     SizedBox(height: 10),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text('Cor: ',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold)),
-                          SizedBox(width: 3),
-                          cardColors.length >= 1
-                              ? Container(
+                    cardColors.length >= 1
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                                Text('Cor: ',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                                SizedBox(width: 3),
+                                Container(
                                   width: 15,
                                   height: 15,
                                   decoration: BoxDecoration(
@@ -173,8 +173,8 @@ class _IndexPageState extends State<IndexPage> {
                                       ),
                                       borderRadius: BorderRadius.circular(7.5)),
                                 )
-                              : Text('N/A')
-                        ]),
+                              ])
+                        : Container(),
                   ]),
             ),
           ],
