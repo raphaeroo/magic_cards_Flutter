@@ -50,7 +50,7 @@ class _IndexPageState extends State<IndexPage> {
       isLoading = true;
     });
     var url =
-        'https://api.magicthegathering.io/v1/cards?page=0&pageSize=30&contains=imageUrl';
+        'https://api.magicthegathering.io/v1/cards?page=0&pageSize=100&contains=imageUrl';
 
     var response = await http.get(url);
 
