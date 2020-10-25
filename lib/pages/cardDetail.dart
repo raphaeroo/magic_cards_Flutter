@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 class CardDetailPage extends StatelessWidget {
   final String card;
   final String cardUrl;
+  final String prefix;
 
-  CardDetailPage({Key key, @required this.card, @required this.cardUrl})
+  CardDetailPage(
+      {Key key,
+      @required this.card,
+      @required this.cardUrl,
+      @required this.prefix})
       : super(key: key);
 
   @override
@@ -27,7 +32,7 @@ class CardDetailPage extends StatelessWidget {
                     width: 300,
                     child: Center(
                       child: Hero(
-                        tag: '${card}_$cardUrl',
+                        tag: '${prefix}_${card}_$cardUrl',
                         child: Image(
                           image: NetworkImage(cardUrl),
                           fit: BoxFit.contain,

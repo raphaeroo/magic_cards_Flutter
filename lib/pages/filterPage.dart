@@ -1,43 +1,27 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:magic_cards/components/floatingAction.dart';
-import 'package:magic_cards/theme/color.dart';
-
 import 'package:http/http.dart' as http;
+import 'package:magic_cards/theme/color.dart';
 
 import 'cardDetail.dart';
 
-class IndexPage extends StatefulWidget {
+class FilterCardPage extends StatefulWidget {
+  final String colorName;
+
+  FilterCardPage({this.colorName});
   @override
-  _IndexPageState createState() => _IndexPageState();
+  _FilterCardPageState createState() =>
+      _FilterCardPageState(colorName: colorName);
 }
 
-class _IndexPageState extends State<IndexPage> {
-  List cards = new List();
+class _FilterCardPageState extends State<FilterCardPage> {
+  final String colorName;
+
+  _FilterCardPageState({this.colorName});
+
+  List cards = [];
   bool isLoading = false;
-
-  final TextEditingController _filter = new TextEditingController();
-  String _searchText = "";
-  List filteredCards = new List(); // names filtered by search text
-  Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text('Magic Cards');
-
-  _IndexPageState() {
-    _filter.addListener(() {
-      if (_filter.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-          filteredCards = cards;
-        });
-      } else {
-        setState(() {
-          _searchText = _filter.text;
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
@@ -49,22 +33,17 @@ class _IndexPageState extends State<IndexPage> {
     setState(() {
       isLoading = true;
     });
+
+    var normalizeColor = colorName.toLowerCase();
     var url =
-        'https://api.magicthegathering.io/v1/cards?page=0&pageSize=30&contains=imageUrl';
+        'https://api.magicthegathering.io/v1/cards?page=0&pageSize=30&contains=imageUrl&colors=$normalizeColor';
 
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
       var items = json.decode(response.body)['cards'];
-      List tempList = new List();
-
-      for (int i = 0; i < items.length; i++) {
-        tempList.add(items[i]);
-      }
-
       setState(() {
         cards = items;
-        filteredCards = tempList;
         isLoading = false;
       });
     } else {
@@ -79,45 +58,9 @@ class _IndexPageState extends State<IndexPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: _appBarTitle,
-          centerTitle: false,
-          actions: <Widget>[
-            IconButton(
-              icon: _searchIcon,
-              onPressed: _searchPressed,
-            ),
-          ],
+          title: Text('Filtro: $colorName Cards'),
         ),
-        floatingActionButton: FancyFab(),
         body: getBody());
-  }
-
-  void _searchPressed() {
-    setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = Icon(Icons.close);
-        this._appBarTitle = TextField(
-          controller: _filter,
-          style: TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            disabledBorder: InputBorder.none,
-            border: InputBorder.none,
-            hintText: 'Procurar...',
-            hintStyle: TextStyle(color: Colors.white),
-            labelStyle: TextStyle(color: Colors.white),
-          ),
-        );
-      } else {
-        this._searchIcon = Icon(Icons.search);
-        this._appBarTitle = Text('Magic Cards');
-        filteredCards = cards;
-        _filter.clear();
-      }
-    });
   }
 
   Widget getBody() {
@@ -128,23 +71,10 @@ class _IndexPageState extends State<IndexPage> {
         ),
       );
     }
-
-    if (_searchText.isNotEmpty) {
-      List tempList = new List();
-      for (int i = 0; i < filteredCards.length; i++) {
-        if (filteredCards[i]['name']
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(filteredCards[i]);
-        }
-      }
-      filteredCards = tempList;
-    }
-
     return ListView.builder(
-      itemCount: filteredCards.length,
+      itemCount: cards.length,
       itemBuilder: (BuildContext context, int index) {
-        return getCard(filteredCards[index]);
+        return getCard(cards[index]);
       },
     );
   }
@@ -182,7 +112,7 @@ class _IndexPageState extends State<IndexPage> {
               opaque: false,
               pageBuilder: (BuildContext context, __, _) => CardDetailPage(
                   card: cardName,
-                  prefix: 'homePage',
+                  prefix: 'filterPage',
                   cardUrl: cardImage != null ? cardImage : fallbackImage))),
       child: Card(
         child: Padding(
@@ -191,7 +121,7 @@ class _IndexPageState extends State<IndexPage> {
               child: Row(
             children: <Widget>[
               Hero(
-                tag: 'homePage_${cardName}_$cardImage',
+                tag: 'filterPage_${cardName}_$cardImage',
                 child: Image(
                   image: NetworkImage(
                       cardImage != null ? cardImage : fallbackImage),

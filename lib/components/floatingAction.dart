@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magic_cards/pages/filterPage.dart';
 import 'package:magic_cards/theme/color.dart';
 
 class FancyFab extends StatefulWidget {
@@ -6,7 +7,11 @@ class FancyFab extends StatefulWidget {
   final String tooltip;
   final IconData icon;
 
-  FancyFab({this.onPressed, this.tooltip, this.icon});
+  FancyFab({
+    this.onPressed,
+    this.tooltip,
+    this.icon,
+  });
 
   @override
   _FancyFabState createState() => _FancyFabState();
@@ -20,6 +25,14 @@ class _FancyFabState extends State<FancyFab>
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 40;
+
+  void onColorPress(colorName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => FilterCardPage(colorName: colorName)),
+    );
+  }
 
   @override
   initState() {
@@ -77,7 +90,7 @@ class _FancyFabState extends State<FancyFab>
         child: new RawMaterialButton(
           shape: new CircleBorder(),
           elevation: 0.0,
-          onPressed: () {},
+          onPressed: () => onColorPress('Blue'),
         ));
   }
 
@@ -90,7 +103,7 @@ class _FancyFabState extends State<FancyFab>
         child: new RawMaterialButton(
           shape: new CircleBorder(),
           elevation: 0.0,
-          onPressed: () {},
+          onPressed: () => onColorPress('Green'),
         ));
   }
 
@@ -103,10 +116,9 @@ class _FancyFabState extends State<FancyFab>
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.black, width: 1)),
         child: new RawMaterialButton(
-          shape: new CircleBorder(),
-          elevation: 0.0,
-          onPressed: () {},
-        ));
+            shape: new CircleBorder(),
+            elevation: 0.0,
+            onPressed: () => onColorPress('White')));
   }
 
   Widget black() {
@@ -118,7 +130,7 @@ class _FancyFabState extends State<FancyFab>
         child: new RawMaterialButton(
           shape: new CircleBorder(),
           elevation: 0.0,
-          onPressed: () {},
+          onPressed: () => onColorPress('Black'),
         ));
   }
 
@@ -131,7 +143,7 @@ class _FancyFabState extends State<FancyFab>
         child: new RawMaterialButton(
           shape: new CircleBorder(),
           elevation: 0.0,
-          onPressed: () {},
+          onPressed: () => onColorPress('Red'),
         ));
   }
 
